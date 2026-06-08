@@ -1,12 +1,19 @@
 import { useState, type FormEvent } from 'react';
 import logo from '../assets/logo.png';
-import { User, Mail, ArrowRight, Check, X } from 'lucide-react';
+import { User, Mail, ArrowRight, Check, X, MessageSquare } from 'lucide-react';
 import './Hero.css';
+import CountryDropdown from './CountryDropdown';
+import { countries, type Country } from './countries';
+
 const QUEUE_OFFSET = 124;
 
 export default function Hero() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState<Country>(
+    countries.find(c => c.code === 'US') || countries[0]
+  );
+  const [useCase, setUseCase] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,19 +30,13 @@ export default function Hero() {
       setError('Please enter a valid work email');
       return;
     }
+    if (!useCase.trim()) {
+      setError('Please tell us what you are going to use the product for');
+      return;
+    }
     
     setError('');
     setIsLoading(true);
-
-    let locationData: any = {};
-    try {
-      const geoRes = await fetch('https://ipapi.co/json/');
-      if (geoRes.ok) {
-        locationData = await geoRes.json();
-      }
-    } catch (err) {
-      console.error('Location fetch failed:', err);
-    }
 
     // Generate custom unique customer ID (format: FIN-XXXX-XXXX)
     const generateUniqueId = () => {
@@ -45,8 +46,7 @@ export default function Hero() {
     };
 
     const uniqueId = generateUniqueId();
-    const locationStr = [locationData.city, locationData.region, locationData.country_name].filter(Boolean).join(', ') || 'Unknown';
-    const countryStr = locationData.country_name || 'Unknown';
+    const countryStr = `${selectedCountry.flag} ${selectedCountry.name}`;
 
     // 1. Submit to Supabase
     try {
@@ -61,8 +61,8 @@ export default function Hero() {
         body: JSON.stringify({
           name,
           email,
-          location: locationStr,
           country: countryStr,
+          use_case: useCase,
           unique_id: uniqueId
         })
       });
@@ -101,7 +101,8 @@ export default function Hero() {
       referrer: document.referrer,
       screenResolution: `${window.screen.width}x${window.screen.height}`,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      location: locationData
+      country: countryStr,
+      useCase: useCase
     };
 
     try {
@@ -197,6 +198,21 @@ export default function Hero() {
                   Work Email: It is recommended to enter your work email. If not, Gmail IDs will work fine.
                 </span>
 
+                <div className="input-group">
+                  <CountryDropdown selected={selectedCountry} onChange={setSelectedCountry} />
+                </div>
+
+                <div className="input-group">
+                  <span className="input-icon"><MessageSquare size={18} /></span>
+                  <input 
+                    type="text" 
+                    placeholder="What will you use our product for?" 
+                    value={useCase}
+                    onChange={(e) => setUseCase(e.target.value)}
+                    className="waitlist-input"
+                  />
+                </div>
+
                 {error && <div className="form-error-msg">{error}</div>}
 
                 <button type="submit" className="btn-submit-form" disabled={isLoading}>
@@ -220,6 +236,7 @@ export default function Hero() {
                 setIsSubmitted(false);
                 setName('');
                 setEmail('');
+                setUseCase('');
               }}
               aria-label="Close success message"
             >
