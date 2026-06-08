@@ -40,7 +40,13 @@ export default function CountryDropdown({ selected, onChange }: CountryDropdownP
           <Globe size={18} />
         </span>
         <span className="selected-country-info">
-          <span className="selected-flag">{selected.flag}</span>
+          <img 
+            src={`https://flagcdn.com/w40/${selected.code.toLowerCase()}.png`} 
+            srcSet={`https://flagcdn.com/w80/${selected.code.toLowerCase()}.png 2x`}
+            width="20"
+            alt={selected.name}
+            className="selected-flag-img"
+          />
           <span className="selected-name">{selected.name}</span>
         </span>
         <span className="dropdown-caret">
@@ -49,7 +55,7 @@ export default function CountryDropdown({ selected, onChange }: CountryDropdownP
       </button>
 
       {isOpen && (
-        <div className="country-dropdown-panel animate-fade-in-up">
+        <div className="country-dropdown-panel">
           <div className="dropdown-search-wrapper">
             <Search size={14} className="search-icon-inside" />
             <input
@@ -76,7 +82,13 @@ export default function CountryDropdown({ selected, onChange }: CountryDropdownP
                     setSearch('');
                   }}
                 >
-                  <span className="option-flag">{country.flag}</span>
+                  <img 
+                    src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} 
+                    srcSet={`https://flagcdn.com/w80/${country.code.toLowerCase()}.png 2x`}
+                    width="20"
+                    alt={country.name}
+                    className="option-flag-img"
+                  />
                   <span className="option-name">{country.name}</span>
                   <span className="option-code">{country.code}</span>
                 </li>

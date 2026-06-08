@@ -1,13 +1,13 @@
 .hero {
   position: relative;
-  height: 100vh;
-  min-height: 620px;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 24px 20px;
+  padding: 100px 24px 40px;
   background-color: var(--bg-primary);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .hero-glow {
@@ -149,6 +149,7 @@
 
 /* Waitlist Form Card */
 .waitlist-card-wrapper {
+  position: relative;
   width: 100%;
   max-width: 440px;
   background: var(--card-bg);
@@ -762,9 +763,13 @@
   flex: 1;
 }
 
-.selected-flag {
-  font-size: 1.2rem;
-  line-height: 1;
+.selected-flag-img, .option-flag-img {
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+  object-fit: cover;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .selected-name {
@@ -786,6 +791,7 @@
   transform: rotate(180deg);
 }
 
+/* Base Dropdown Panel (Mobile Fallback) */
 .country-dropdown-panel {
   position: absolute;
   top: calc(100% + 8px);
@@ -797,11 +803,26 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
   z-index: 100;
-  max-height: 280px;
+  max-height: 250px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: dropdownFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Desktop Panel Alignment (Right Side of Card) */
+@media (min-width: 900px) {
+  .country-dropdown-panel {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 24px);
+    right: auto;
+    width: 340px;
+    max-height: 440px;
+    height: auto;
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @keyframes dropdownFadeInUp {
@@ -888,11 +909,6 @@
 .country-option-item.active {
   background: rgba(240, 110, 48, 0.15);
   color: var(--primary-orange);
-}
-
-.option-flag {
-  font-size: 1.2rem;
-  line-height: 1;
 }
 
 .option-name {
