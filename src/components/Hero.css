@@ -10,16 +10,6 @@
   overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .hero {
-    height: auto;
-    min-height: 100vh;
-    padding: 100px 24px 40px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-
 .hero-glow {
   position: absolute;
   top: 45%;
@@ -457,7 +447,7 @@
 
 /* Hero Footer Notes */
 .hero-footer-notes {
-  margin-top: 24px;
+  margin-top: 60px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -638,6 +628,13 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 100px 24px 40px;
+  }
   .grid-beam-v {
     height: 100px;
   }
@@ -741,12 +738,6 @@
   width: 100%;
 }
 
-@media (min-width: 900px) {
-  .country-dropdown-wrapper {
-    position: static;
-  }
-}
-
 .country-dropdown-trigger {
   width: 100%;
   background: rgba(0, 0, 0, 0.3);
@@ -826,15 +817,15 @@
   animation: dropdownFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Desktop Panel Alignment (Right Side of Card - Notion Style Same Height) */
+/* Desktop Panel Alignment (Right Side of Card) */
 @media (min-width: 900px) {
   .country-dropdown-panel {
     position: absolute;
     top: 0;
-    bottom: 0;
     left: calc(100% + 24px);
     right: auto;
     width: 340px;
+    max-height: 440px;
     height: auto;
     border-radius: var(--border-radius-xl);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
@@ -884,7 +875,7 @@
 
 .country-options-list {
   list-style: none;
-  padding: 0;
+  padding: 0 0 24px 0;
   margin: 0;
   overflow-y: auto;
   flex: 1;
