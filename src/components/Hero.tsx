@@ -48,6 +48,24 @@ export default function Hero() {
     const uniqueId = generateUniqueId();
     const countryStr = `${selectedCountry.flag} ${selectedCountry.name}`;
 
+    // Fetch existing records to determine the sequential serial number (no gaps)
+    let nextSerialNumber = 1;
+    try {
+      const countRes = await fetch('https://vhscxuefhkvpryaaweae.supabase.co/rest/v1/customers?select=id', {
+        method: 'GET',
+        headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc2N4dWVmaGt2cHJ5YWF3ZWFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzMzcsImV4cCI6MjA5NjQyNzMzN30.s47FpqFKoUBINtNwbuZ2e4qoJuSbyTRfRfIrzwzAfBU',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc2N4dWVmaGt2cHJ5YWF3ZWFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzMzcsImV4cCI6MjA5NjQyNzMzN30.s47FpqFKoUBINtNwbuZ2e4qoJuSbyTRfRfIrzwzAfBU'
+        }
+      });
+      if (countRes.ok) {
+        const countData = await countRes.json().catch(() => []);
+        nextSerialNumber = countData.length + 1;
+      }
+    } catch (err) {
+      console.error('Failed to fetch customers count:', err);
+    }
+
     // 1. Submit to Supabase
     try {
       const dbRes = await fetch('https://vhscxuefhkvpryaaweae.supabase.co/rest/v1/customers', {
@@ -77,10 +95,7 @@ export default function Hero() {
         throw new Error(errData.message || 'Database submission failed');
       }
 
-      // Read returned database ID
-      const resData = await dbRes.json().catch(() => []);
-      const dbId = resData[0]?.id || 1;
-      setDbSerialNumber(dbId);
+      setDbSerialNumber(nextSerialNumber);
 
     } catch (err: any) {
       console.error('Database submission failed:', err);
